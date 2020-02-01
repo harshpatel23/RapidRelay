@@ -24,7 +24,7 @@ class LogWriter implements Runnable{
 				this.date = new Date();
 				this.ts = new Timestamp(date.getTime());
 				BufferedWriter out = new BufferedWriter(new FileWriter(filename,true));
-				out.write("Time : " + ts.toString() + " Data Sent: " + data_sent.getAndIncrement() +" Data Received " + data_received.getAndIncrement() + "\n");
+				out.write(ts.toString() + "," + data_sent.getAndIncrement() +"," + data_received.getAndIncrement() + "\n");
 				out.close();
 				Thread.sleep(10000);
 			}catch(Exception e){
@@ -379,9 +379,9 @@ class AirSensor implements Runnable{
 class SensorBots{
 	public static void main(String[] args) throws InterruptedException{
 
-		int agriculture_bot = 17;
-		int weather_bot = 17;
-		int air_bot = 17;
+		int agriculture_bot = 20;
+		int weather_bot = 20;
+		int air_bot = 20;
 
 		String url = "http://192.168.225.77:5000/data/read";
 
