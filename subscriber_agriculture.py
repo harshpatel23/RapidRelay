@@ -21,7 +21,8 @@ def on_message(client, userdata, message):
 
     with connection.cursor() as cursor:
         sql = "INSERT INTO `agriculture` (`time`, `greenhouse_id`, `humidity`, `temperature`, `moisture`) " \
-              "VALUES (%s, %s, %s, %s, %s, %s``)"
+              "VALUES (%s, %s, %s, %s, %s, %s)"
+        print(sql)
         cursor.execute(sql, (str(msg['time']), msg['greenhouse_id'], msg['humidity'], msg['temperature'], msg['moisture']))
     connection.commit()
 
