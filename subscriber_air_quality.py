@@ -11,9 +11,11 @@ connection = pymysql.connect(host='localhost',
 
 broker_address = "10.0.15.92"
 queue_name = "queue_air_quality"
+count = 0
 
 
 def on_message(client, userdata, message):
+    global count
     msg = json.loads(str(message.payload.decode("utf-8")))
     print(str(msg))
     with connection.cursor() as cursor:
@@ -22,7 +24,10 @@ def on_message(client, userdata, message):
             msg['suburb']) + "'," + str(msg['so2']) + "," + str(msg['no2']) + "," + str(msg['o3']) + ")"
         print(sql)
         cursor.execute(sql)
-    connection.commit()
+
+    if count % 100 == 0:
+        connection.commit()
+        count = 0
 
 
 def on_connect(mqtt_client, obj, flags, rc):
