@@ -5,6 +5,7 @@ import base64
 import json
 import traceback
 from threading import Thread
+import socket
 
 
 host = 'www.google.com'
@@ -48,7 +49,7 @@ def upload_data_from(table):
 		results = json.dumps(results)
 		print('json data', results)
 		compressed = base64.b64encode(zlib.compress(bytes(results, 'utf-8'), 1))
-		print(compressed)
+		# print(compressed)
 
 		# decompress in cloud
 		# decompressed = zlib.decompress(base64.b64decode(compressed))
@@ -58,6 +59,7 @@ def upload_data_from(table):
 		# print(decompressed)
 
 		# 3. send data to cloud
+
 
 
 		# 4. delete data from db
@@ -72,7 +74,26 @@ def upload_data_from(table):
 
 	db.close()
 
+def send_data_to_cloud(filename):
+	s = socket.socket()             # Create a socket object
+	host = socket.gethostname()     # Get local machine name
+	port = 60000                    # Reserve a port for your service.
+	buffer_size = 102400
 
+	s.connect((host, port))
+
+	f = open(filename,'rb')
+	l = f.read(buffer_size)
+	while (l):
+	   s.send(l)
+	   # print('Sent ',repr(l))
+	   l = f.read(buffer_size)
+	f.close()
+
+	print('Done sending'+filename)
+	s.close()
+	f.close()
+	s.close()
 
 
 # check internet connection
