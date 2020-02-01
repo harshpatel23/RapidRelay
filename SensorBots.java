@@ -3,9 +3,10 @@ import java.sql.Timestamp;
 import org.json.simple.JSONObject;
 import java.net.*;
 import java.io.*;
+import java.util.concurrent.atomic.AtomicInteger;
 // import java.io.OutputStreamWriter;
 
-class LogWriter implements runnable{
+class LogWriter implements Runnable{
 	Date date;
 	Timestamp ts;
 	AtomicInteger data_received;
@@ -20,7 +21,7 @@ class LogWriter implements runnable{
 	public void run(){
 		try{
 			this.ts = new Timestamp(date.getTime());
-			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
 			out.write("Time : " + ts.toString() + " Data Sent: " + data_sent.getAndIncrement() +" Data Received " + data_received.getAndIncrement());
 			out.close();
 			Thread.sleep(30000);
@@ -70,7 +71,7 @@ class WeatherSensor implements Runnable{
 		this.city = location.city;
 		this.suburb = location.suburb;
 		this.type = "weather";
-		this.data_sent = data_sent
+		this.data_sent = data_sent;
 		this.data_received = data_received;
 		try{
 			this.url = new URL("http://127.0.0.1:5000/" + path);
@@ -165,7 +166,6 @@ class WeatherSensor implements Runnable{
     		if(response.toString().equals("OK")){
     			data_received.getAndIncrement();
     		}
-    		if(response)
 		}catch(Exception e){
 			System.out.println(e);
 		}
