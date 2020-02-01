@@ -26,8 +26,17 @@ while True:
 
 	# decompress file
 	# TODO
+	# decompress in cloud
+	# decompressed = zlib.decompress(base64.b64decode(compressed))
+	# print(decompressed, type(decompressed))
+	#
+	# decompressed = json.loads(decompressed)
+	# print(decompressed)
 
-	# remove old file
+	# parse data and put it in sql
 	# TODO
-	
+
+	# remove compressed file
+	# TODO
+
 	conn.close()
