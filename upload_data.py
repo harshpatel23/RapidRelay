@@ -71,13 +71,6 @@ def compress_data_to_file_from(table):
 		with open(f'{compressed_files_dir}/{table}_{current_time}', 'wb') as bin_file:
 			bin_file.write(compressed)
 
-		# decompress in cloud
-		# decompressed = zlib.decompress(base64.b64decode(compressed))
-		# print(decompressed, type(decompressed))
-		#
-		# decompressed = json.loads(decompressed)
-		# print(decompressed)
-
 
 		# 3. delete data from db
 
@@ -159,6 +152,8 @@ if is_connected(host) and not is_already_running():
 	query = 'update locks set value = "false" where flag = 1;'
 	cursor.execute(query)
 	db.commit()
+
+	# TODO remove compressed files after use
 
 else:
 	# else don't do anything
