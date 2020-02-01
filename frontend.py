@@ -12,6 +12,5 @@ def show_city_weather(city):
 	# query database
 	return None
 
-
 if __name__ == '__main__':
     app.run()
