@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 01, 2020 at 06:30 PM
+-- Generation Time: Feb 01, 2020 at 11:56 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.1.27
 
@@ -56,6 +56,24 @@ CREATE TABLE `air_quality_data` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `locks`
+--
+
+CREATE TABLE `locks` (
+  `flag` int(11) NOT NULL,
+  `value` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `locks`
+--
+
+INSERT INTO `locks` (`flag`, `value`) VALUES
+(1, 'false');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -103,6 +121,12 @@ ALTER TABLE `agriculture_data`
 --
 ALTER TABLE `air_quality_data`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `locks`
+--
+ALTER TABLE `locks`
+  ADD PRIMARY KEY (`flag`);
 
 --
 -- Indexes for table `weather_data`
