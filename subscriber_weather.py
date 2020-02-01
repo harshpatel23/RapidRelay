@@ -29,7 +29,7 @@ def on_message(client, userdata, message):
 
     if count % 500 == 0:
         connection.commit()
-        print(str(msg))
+        print("Received 500 more requests")
         count = 0
 
 

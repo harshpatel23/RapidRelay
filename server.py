@@ -21,7 +21,6 @@ def read():
     # Publish data to broker
     data = request.json
     string_data = json.dumps(data)
-    print("Publishing", data['type'], "data")
     if data['type'] == "weather":
         client.publish("queue_weather", string_data)
     elif data['type'] == "agriculture":
