@@ -1,8 +1,9 @@
 import paho.mqtt.client as mqtt  # import the client1
 import json
 import pymysql.cursors
+from credentials import server_ip
 
-broker_address = "10.0.15.92"
+broker_address = server_ip
 queue_name = "queue_weather"
 count = 0
 
