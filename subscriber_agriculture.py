@@ -1,18 +1,29 @@
 import paho.mqtt.client as mqtt  # import the client1
 import json
+import pymysql.cursors
+
+# Connect to the database
+connection = pymysql.connect(host='localhost',
+                             user='root',
+                             password='',
+                             db='bugbox_db',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+
 
 broker_address = "10.0.15.92"
 queue_name = "queue_agriculture"
 
 
 def on_message(client, userdata, message):
-    print("message received ", str(message.payload.decode("utf-8")))
-    print("message topic=", message.topic)
-    print("message qos=", message.qos)
-    print("message retain flag=", message.retain)
-
     msg = json.loads(message)
     print(str(msg))
+
+    with connection.cursor() as cursor:
+        sql = "INSERT INTO `agriculture` (`time`, `greenhouse_id`, `humidity`, `temperature`, `moisture`) " \
+              "VALUES (%s, %s, %s, %s, %s, %s``)"
+        cursor.execute(sql, (str(msg['time']), msg['greenhouse_id'], msg['humidity'], msg['temperature'], msg['moisture']))
+    connection.commit()
 
 
 def on_connect(mqtt_client, obj, flags, rc):
