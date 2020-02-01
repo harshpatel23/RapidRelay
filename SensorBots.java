@@ -86,8 +86,8 @@ class WeatherSensor implements Runnable{
 		this.data.put("temperature", this.temperature);
 		this.data.put("pressure", this.pressure);
 
-		System.out.println(data);
-		System.out.println();
+		// System.out.println(data);
+		// System.out.println();
 	}
 
 	// public void sendHttpPacket() throws Exception{
@@ -117,7 +117,6 @@ class WeatherSensor implements Runnable{
 		con.setRequestProperty("Accept", "application/json");
 		con.setDoOutput(true);
 		String jsonInputString = this.data.toString();
-		System.out.println(jsonInputString);
 		try(OutputStream os = con.getOutputStream()){
     		byte[] input = jsonInputString.getBytes("utf-8");
     		os.write(input, 0, input.length);           
@@ -189,14 +188,14 @@ class AgricultureSensor implements Runnable{
 	public void createJson(){
 		this.data = new JSONObject();
 		this.data.put("type", this.type);
-		this.data.put("time", this.ts.toString);
+		this.data.put("time", this.ts.toString());
 		this.data.put("greenhouse_id", this.greenhouse_id);
 		this.data.put("humidity", this.humidity);
 		this.data.put("temperature", this.temperature);
 		this.data.put("moisture", this.moisture);
 
-		System.out.println(data);
-		System.out.println();
+		// System.out.println(data);
+		// System.out.println();
 	}
 
 	public void sendHttpPacket() throws Exception{
@@ -206,7 +205,7 @@ class AgricultureSensor implements Runnable{
 		con.setRequestProperty("Accept", "application/json");
 		con.setDoOutput(true);
 		String jsonInputString = this.data.toString();
-		System.out.println(jsonInputString);
+		// System.out.println(jsonInputString);
 		try(OutputStream os = con.getOutputStream()){
     		byte[] input = jsonInputString.getBytes("utf-8");
     		os.write(input, 0, input.length);           
@@ -287,8 +286,8 @@ class AirSensor implements Runnable{
 		this.data.put("no2", this.no2);
 		this.data.put("o3", this.o3);
 
-		System.out.println(data);
-		System.out.println();
+		// System.out.println(data);
+		// System.out.println();
 	}
 
 	public void sendHttpPacket() throws Exception{
@@ -298,7 +297,7 @@ class AirSensor implements Runnable{
 		con.setRequestProperty("Accept", "application/json");
 		con.setDoOutput(true);
 		String jsonInputString = this.data.toString();
-		System.out.println(jsonInputString);
+		// System.out.println(jsonInputString);
 		try(OutputStream os = con.getOutputStream()){
     		byte[] input = jsonInputString.getBytes("utf-8");
     		os.write(input, 0, input.length);           
@@ -324,9 +323,9 @@ class AirSensor implements Runnable{
 class SensorBots{
 	public static void main(String[] args) throws InterruptedException{
 
-		int agriculture_bot = 10;
-		int weather_bot = 20;
-		int air_bot = 20;
+		int agriculture_bot = 17;
+		int weather_bot = 17;
+		int air_bot = 17;
 
 		ArrayList<Location> locations = new ArrayList<Location>();
 

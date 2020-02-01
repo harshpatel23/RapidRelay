@@ -4,6 +4,7 @@ import pymysql.cursors
 
 broker_address = "10.0.15.92"
 queue_name = "queue_weather"
+count = 0
 
 connection = pymysql.connect(host='localhost',
                              user='root',
@@ -14,15 +15,20 @@ connection = pymysql.connect(host='localhost',
 
 
 def on_message(client, userdata, message):
+    global count
     msg = json.loads(str(message.payload.decode("utf-8")))
-    print(str(msg))
+    # print(str(msg))
     with connection.cursor() as cursor:
         sql = "INSERT INTO `weather_data` (`time`, `city`, `suburb`, `humidity`, `temperature`, `pressure`) " \
               "VALUES ('" + str(msg['time']) + "','" + str(msg['city']) + "','" + str(
             msg['suburb']) + "'," + str(msg['humidity']) + "," + str(msg['temperature']) + "," + str(msg['pressure']) + ")"
-        print(sql)
+        # print(sql)
         cursor.execute(sql)
-    connection.commit()
+        count = count + 1
+
+    if count % 500 == 0:
+        connection.commit()
+        count = 0
 
 
 def on_connect(mqtt_client, obj, flags, rc):
