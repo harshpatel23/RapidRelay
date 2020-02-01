@@ -8,6 +8,10 @@ client = mqtt.Client("P1")
 client.connect(broker_address, port=1883)
 
 
+def on_connect(mqtt_client, obj, flags, rc):
+    print("ON CONNECT")
+
+
 @app.route('/data/read', methods=['GET', 'POST'])
 def read():
     # Publish data to broker

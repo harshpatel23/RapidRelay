@@ -1,9 +1,9 @@
 import paho.mqtt.client as mqtt  # import the client1
-import time
 import json
 
 broker_address = "10.0.15.92"
 queue_name = "queue_agriculture"
+
 
 def on_message(client, userdata, message):
     print("message received ", str(message.payload.decode("utf-8")))
@@ -28,5 +28,3 @@ print("connecting to broker")
 client.connect(broker_address, port=1883)  # connect to broker
 
 client.loop_forever()
-# time.sleep(4)  # wait
-# client.loop_stop()  # stop the loop
