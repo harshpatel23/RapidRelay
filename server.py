@@ -14,12 +14,13 @@ def on_connect(mqtt_client, obj, flags, rc):
 
 client.on_connect = on_connect
 
+
 @app.route('/data/read', methods=['GET', 'POST'])
 def read():
     # Publish data to broker
     data = request.json
     string_data = json.dumps(data)
-    # print(string_data)
+    print("Publishing", data['type'], "data")
     if data['type'] == "weather":
         client.publish("queue_weather", string_data)
     elif data['type'] == "agriculture":
