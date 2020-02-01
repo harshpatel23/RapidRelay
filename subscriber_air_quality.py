@@ -17,15 +17,16 @@ count = 0
 def on_message(client, userdata, message):
     global count
     msg = json.loads(str(message.payload.decode("utf-8")))
-    print(str(msg))
+    # print(str(msg))
     with connection.cursor() as cursor:
         sql = "INSERT INTO `air_quality_data` (`time`, `city`, `suburb`, `SO2`, `NO2`, `O3`) " \
               "VALUES ('" + str(msg['time']) + "','" + str(msg['city']) + "','" + str(
             msg['suburb']) + "'," + str(msg['so2']) + "," + str(msg['no2']) + "," + str(msg['o3']) + ")"
-        print(sql)
+        # print(sql)
         cursor.execute(sql)
+        count = count + 1
 
-    if count % 100 == 0:
+    if count % 500 == 0:
         connection.commit()
         count = 0
 

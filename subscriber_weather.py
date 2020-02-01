@@ -17,15 +17,16 @@ connection = pymysql.connect(host='localhost',
 def on_message(client, userdata, message):
     global count
     msg = json.loads(str(message.payload.decode("utf-8")))
-    print(str(msg))
+    # print(str(msg))
     with connection.cursor() as cursor:
         sql = "INSERT INTO `weather_data` (`time`, `city`, `suburb`, `humidity`, `temperature`, `pressure`) " \
               "VALUES ('" + str(msg['time']) + "','" + str(msg['city']) + "','" + str(
             msg['suburb']) + "'," + str(msg['humidity']) + "," + str(msg['temperature']) + "," + str(msg['pressure']) + ")"
-        print(sql)
+        # print(sql)
         cursor.execute(sql)
+        count = count + 1
 
-    if count % 100 == 0:
+    if count % 500 == 0:
         connection.commit()
         count = 0
 

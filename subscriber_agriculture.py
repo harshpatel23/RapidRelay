@@ -19,15 +19,15 @@ count = 0
 def on_message(client, userdata, message):
     global count
     msg = json.loads(str(message.payload.decode("utf-8")))
-    print(str(msg))
+    # print(str(msg))
     with connection.cursor() as cursor:
         sql = "INSERT INTO `agriculture_data` (`time`, `greenhouse_id`, `humidity`, `temperature`, `moisture`) " \
               "VALUES ('"+str(msg['time'])+"',"+str(msg['greenhouse_id'])+","+ str(msg['humidity'])+","+str(msg['temperature'])+","+ str(msg['moisture'])+")"
-        print(sql)
+        # print(sql)
         cursor.execute(sql)
         count = count + 1
 
-    if count % 100 == 0:
+    if count % 500 == 0:
         connection.commit()
         count = 0
 
