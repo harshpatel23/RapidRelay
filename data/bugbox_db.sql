@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 01, 2020 at 04:55 PM
+-- Generation Time: Feb 01, 2020 at 06:30 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.1.27
 
@@ -37,13 +37,6 @@ CREATE TABLE `agriculture_data` (
   `moisture` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `agriculture_data`
---
-
-INSERT INTO `agriculture_data` (`id`, `time`, `greenhouse_id`, `humidity`, `temperature`, `moisture`) VALUES
-(1, 'asd', 12, 123, 123, 123);
-
 -- --------------------------------------------------------
 
 --
@@ -52,7 +45,7 @@ INSERT INTO `agriculture_data` (`id`, `time`, `greenhouse_id`, `humidity`, `temp
 
 CREATE TABLE `air_quality_data` (
   `id` int(11) NOT NULL,
-  `time` text NOT NULL,
+  `time` varchar(25) NOT NULL,
   `city` varchar(25) NOT NULL,
   `suburb` varchar(25) NOT NULL,
   `SO2` float NOT NULL,
@@ -125,19 +118,19 @@ ALTER TABLE `weather_data`
 -- AUTO_INCREMENT for table `agriculture_data`
 --
 ALTER TABLE `agriculture_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `air_quality_data`
 --
 ALTER TABLE `air_quality_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `weather_data`
 --
 ALTER TABLE `weather_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
