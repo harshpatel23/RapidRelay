@@ -134,6 +134,7 @@ dmypy.json
 json-simple-1.1.1.jar
 *.class
 .idea/
+transmission_logs.txt
 
 sample_1.txt
 credentials.py
