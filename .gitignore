@@ -104,11 +104,14 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv1
+venv1/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+venv1.bak/
 
 # Spyder project settings
 .spyderproject
@@ -130,3 +133,5 @@ dmypy.json
 
 json-simple-1.1.1.jar
 *.class
+.idea/
+
