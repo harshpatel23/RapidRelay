@@ -22,12 +22,12 @@ def on_message(client, userdata, message):
         sql = "INSERT INTO `air_quality_data` (`time`, `city`, `suburb`, `SO2`, `NO2`, `O3`) " \
               "VALUES ('" + str(msg['time']) + "','" + str(msg['city']) + "','" + str(
             msg['suburb']) + "'," + str(msg['so2']) + "," + str(msg['no2']) + "," + str(msg['o3']) + ")"
-        # print(sql)
         cursor.execute(sql)
         count = count + 1
 
     if count % 500 == 0:
         connection.commit()
+        print(str(msg))
         count = 0
 
 

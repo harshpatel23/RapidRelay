@@ -28,6 +28,7 @@ def on_message(client, userdata, message):
 
     if count % 500 == 0:
         connection.commit()
+        print(str(msg))
         count = 0
 
 
