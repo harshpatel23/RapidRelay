@@ -9,8 +9,9 @@ def hello_world():
 
 @app.route('/weather/<city>')
 def show_city_weather(city):
-	# query database
-	return None
+    # query database
+    return None
+
 
 if __name__ == '__main__':
     app.run()

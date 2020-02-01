@@ -1,0 +1,25 @@
+compressing agriculture_data
+compressing air_quality_data
+compressing weather_data
+connected
+air_quality_data_1580587443_3341286
+agriculture_data_1580587442_932277
+agriculture_data_1580587742_3878403
+weather_data_1580587742_2683146
+air_quality_data_1580587742_4569917
+weather_data_1580587443_1794238
+compressing agriculture_data
+compressing air_quality_data
+compressing weather_data
+connected
+air_quality_data_1580587443_3341286
+Traceback (most recent call last):
+  File "/home/tanay/Projects/BugBox/upload_data.py", line 150, in <module>
+    send_data_to_cloud(compressed_files_dir+'/'+ filename)
+  File "/home/tanay/Projects/BugBox/upload_data.py", line 97, in send_data_to_cloud
+    s.connect((host, port))
+ConnectionRefusedError: [Errno 111] Connection refused
+compressing agriculture_data
+compressing air_quality_data
+compressing weather_data
+not connected or already running
