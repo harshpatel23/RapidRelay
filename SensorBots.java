@@ -3,7 +3,34 @@ import java.sql.Timestamp;
 import org.json.simple.JSONObject;
 import java.net.*;
 import java.io.*;
+import java.util.concurrent.atomic.AtomicInteger;
 // import java.io.OutputStreamWriter;
+
+class LogWriter implements Runnable{
+	Date date;
+	Timestamp ts;
+	AtomicInteger data_received;
+	AtomicInteger data_sent;
+	String filename = "transmission_logs.txt";
+
+	public LogWriter(AtomicInteger data_sent, AtomicInteger data_received){
+		this.data_sent = data_sent;
+		this.data_received = data_received;
+	}
+
+	public void run(){
+		try{
+			this.ts = new Timestamp(date.getTime());
+			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+			out.write("Time : " + ts.toString() + " Data Sent: " + data_sent.getAndIncrement() +" Data Received " + data_received.getAndIncrement());
+			out.close();
+			Thread.sleep(30000);
+		}catch(Exception e){
+			System.out.println(e);
+		}
+	}
+
+}
 
 class Location{
 	String city;
@@ -24,7 +51,7 @@ class WeatherSensor implements Runnable{
 	Date date;
 	Timestamp ts;
 	String city;
-	String suburb;
+	String suburb;	
 	double humidity;
 	double temperature;
 	double pressure;
@@ -33,16 +60,19 @@ class WeatherSensor implements Runnable{
 	String type;
 	URL url;
 	String path = "data/read";
-
+	AtomicInteger data_sent;
+	AtomicInteger data_received;
 	// Socket socket;
 	// BufferedWriter socketWr;
 
-	public WeatherSensor(int id,Location location){
+	public WeatherSensor(int id,Location location, AtomicInteger data_sent, AtomicInteger data_received){
 		this.node_id = id;
 		this.message_no = 0;
 		this.city = location.city;
 		this.suburb = location.suburb;
 		this.type = "weather";
+		this.data_sent = data_sent;
+		this.data_received = data_received;
 		try{
 			this.url = new URL("http://127.0.0.1:5000/" + path);
 		}catch(Exception e){
@@ -120,6 +150,7 @@ class WeatherSensor implements Runnable{
 		try(OutputStream os = con.getOutputStream()){
     		byte[] input = jsonInputString.getBytes("utf-8");
     		os.write(input, 0, input.length);           
+    		data_sent.getAndIncrement();
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -132,6 +163,9 @@ class WeatherSensor implements Runnable{
        			response.append(responseLine.trim());
     		}
     		System.out.println(response.toString());
+    		if(response.toString().equals("OK")){
+    			data_received.getAndIncrement();
+    		}
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -152,12 +186,16 @@ class AgricultureSensor implements Runnable{
 	String type;
 	URL url;
 	String path = "data/read";
+	AtomicInteger data_sent;
+	AtomicInteger data_received;
 
-	public AgricultureSensor(int id,int greenhouse_id){
+	public AgricultureSensor(int id,int greenhouse_id, AtomicInteger data_sent, AtomicInteger data_received){
 		this.node_id = id;
 		this.message_no = 0;
 		this.greenhouse_id = greenhouse_id;
 		this.type = "agriculture";
+		this.data_received = data_received;
+		this.data_sent = data_sent;
 		try{
 			this.url = new URL("http://127.0.0.1:5000/" + path);
 		}catch(Exception e){
@@ -208,7 +246,8 @@ class AgricultureSensor implements Runnable{
 		// System.out.println(jsonInputString);
 		try(OutputStream os = con.getOutputStream()){
     		byte[] input = jsonInputString.getBytes("utf-8");
-    		os.write(input, 0, input.length);           
+    		os.write(input, 0, input.length); 
+    		data_sent.getAndIncrement();          
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -221,6 +260,9 @@ class AgricultureSensor implements Runnable{
        			response.append(responseLine.trim());
     		}
     		System.out.println(response.toString());
+    		if(response.toString().equals("OK")){
+    			data_received.getAndIncrement();
+    		}
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -242,12 +284,16 @@ class AirSensor implements Runnable{
 	String type;
 	URL url;
 	String path = "data/read";
+	AtomicInteger data_sent;
+	AtomicInteger data_received;
 
-	public AirSensor(int id,Location location){
+	public AirSensor(int id,Location location, AtomicInteger data_sent, AtomicInteger data_received){
 		this.node_id = id;
 		this.message_no = 0;
 		this.city = location.city;
 		this.suburb = location.suburb;
+		this.data_sent = data_sent;
+		this.data_received = data_received;
 		this.type = "air";
 		try{
 			this.url = new URL("http://127.0.0.1:5000/" + path);
@@ -300,7 +346,8 @@ class AirSensor implements Runnable{
 		// System.out.println(jsonInputString);
 		try(OutputStream os = con.getOutputStream()){
     		byte[] input = jsonInputString.getBytes("utf-8");
-    		os.write(input, 0, input.length);           
+    		os.write(input, 0, input.length); 
+    		data_sent.getAndIncrement();          
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -313,6 +360,9 @@ class AirSensor implements Runnable{
        			response.append(responseLine.trim());
     		}
     		System.out.println(response.toString());
+    		if(response.toString().equals("OK")){
+    			data_received.getAndIncrement();
+    		}
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -326,6 +376,10 @@ class SensorBots{
 		int agriculture_bot = 17;
 		int weather_bot = 17;
 		int air_bot = 17;
+
+		AtomicInteger data_sent = new AtomicInteger(1);
+		AtomicInteger data_received = new AtomicInteger(1);
+
 
 		ArrayList<Location> locations = new ArrayList<Location>();
 
@@ -354,17 +408,17 @@ class SensorBots{
 		locations.add(new Location("Pune", "Pune-Satara Road"));
 
 		for(int i=1;i<=agriculture_bot;i++){
-			Thread t = new Thread(new AgricultureSensor(i,1000+i));
+			Thread t = new Thread(new AgricultureSensor(i,1000+i, data_sent, data_received));
 			t.start();
 		}
 
 		for(int i=1;i<=air_bot;i++){
-			Thread t = new Thread(new AirSensor(i,locations.get(i-1)));
+			Thread t = new Thread(new AirSensor(i,locations.get(i-1), data_sent, data_received));
 			t.start();
 		}
 
 		for(int i=1;i<=weather_bot;i++){
-			Thread t = new Thread(new WeatherSensor(i,locations.get(i-1)));
+			Thread t = new Thread(new WeatherSensor(i,locations.get(i-1), data_sent, data_received));
 			t.start();
 		}
 
