@@ -11,7 +11,7 @@ from threading import Thread
 import socket
 import os
 
-host = 'www.google.com'
+host = '127.0.0.1'  # cloud IP
 server = 'localhost'
 username = 'root'
 password = ''
@@ -153,7 +153,7 @@ if is_connected(host) and not is_already_running():
 	for filename in os.listdir(compressed_files_dir):
 		print(filename)
 		# send file to cloud
-		send_data_to_cloud(compressed_files_dir+'/'+ filename)
+		# send_data_to_cloud(compressed_files_dir+'/'+ filename)
 
 	# flag off
 	query = 'update locks set value = "false" where flag = 1;'
