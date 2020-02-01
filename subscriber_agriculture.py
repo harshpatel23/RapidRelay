@@ -11,7 +11,7 @@ connection = pymysql.connect(host='localhost',
                              cursorclass=pymysql.cursors.DictCursor)
 
 
-broker_address = "10.0.15.92"
+broker_address = "192.168.225.77"
 queue_name = "queue_agriculture"
 count = 0
 
