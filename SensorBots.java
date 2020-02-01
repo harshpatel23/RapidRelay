@@ -22,6 +22,7 @@ class LogWriter implements runnable{
 			this.ts = new Timestamp(date.getTime());
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			out.write("Time : " + ts.toString() + " Data Sent: " + data_sent.getAndIncrement() +" Data Received " + data_received.getAndIncrement());
+			out.close();
 			Thread.sleep(30000);
 		}catch(Exception e){
 			System.out.println(e);
