@@ -16,14 +16,13 @@ queue_name = "queue_agriculture"
 
 
 def on_message(client, userdata, message):
-    msg = json.loads(message)
+    msg = json.loads(str(message.payload.decode("utf-8")))
     print(str(msg))
-
     with connection.cursor() as cursor:
-        sql = "INSERT INTO `agriculture` (`time`, `greenhouse_id`, `humidity`, `temperature`, `moisture`) " \
-              "VALUES (%s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO `agriculture_data` (`time`, `greenhouse_id`, `humidity`, `temperature`, `moisture`) " \
+              "VALUES ('"+str(msg['time'])+"',"+str(msg['greenhouse_id'])+","+ str(msg['humidity'])+","+str(msg['temperature'])+","+ str(msg['moisture'])+")"
         print(sql)
-        cursor.execute(sql, (str(msg['time']), msg['greenhouse_id'], msg['humidity'], msg['temperature'], msg['moisture']))
+        cursor.execute(sql)
     connection.commit()
 
 
