@@ -1,6 +1,9 @@
 import java.util.*;
 import java.sql.Timestamp;
 import org.json.simple.JSONObject;
+import java.net.*;
+import java.io.*;
+// import java.io.OutputStreamWriter;
 
 class Location{
 	String city;
@@ -28,6 +31,11 @@ class WeatherSensor implements Runnable{
 	long message_no;
 	JSONObject data;
 	String type;
+	URL url;
+	String path = "data/read";
+
+	// Socket socket;
+	// BufferedWriter socketWr;
 
 	public WeatherSensor(int id,Location location){
 		this.node_id = id;
@@ -35,6 +43,17 @@ class WeatherSensor implements Runnable{
 		this.city = location.city;
 		this.suburb = location.suburb;
 		this.type = "weather";
+		try{
+			this.url = new URL("http://127.0.0.1:5000/" + path);
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		// try{
+		// 	socket = new Socket("127.0.0.1", 3000);
+		// 	socketWr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		// }catch(Exception e){
+		// 	System.out.println(e);
+		// }
 	}
 
 	public void run(){
@@ -48,6 +67,7 @@ class WeatherSensor implements Runnable{
 				this.pressure = 1000 + Math.random() * (1020 - 1000);
 				this.message_no++;
 				this.createJson();
+				this.sendHttpPacket();
 				Thread.sleep(500);
 			}
 			catch(Exception e){
@@ -59,15 +79,62 @@ class WeatherSensor implements Runnable{
 	public void createJson(){
 		this.data = new JSONObject();	
 		this.data.put("type", this.type);
-		this.data.put("time", this.ts);
+		this.data.put("time", this.ts.toString());
 		this.data.put("city", this.city);
 		this.data.put("suburb", this.suburb);
 		this.data.put("humidity", this.humidity);
 		this.data.put("temperature", this.temperature);
 		this.data.put("pressure", this.pressure);
 
-		System.out.println(data);
-		System.out.println();
+		// System.out.println(data);
+		// System.out.println();
+	}
+
+	// public void sendHttpPacket() throws Exception{
+	// 	String path = "/data/read";
+	// 	String sendData = this.data.toString();
+	// 	// System.out.println(data);
+
+	// 	StringBuffer sb = new StringBuffer();
+	// 	sb.append("POST " + path + " HTTP/1.1\r\n");
+	// 	// sb.append("Host: http://127.0.0.1\r\n");
+	//     sb.append("Content-Length: " + this.sendData.length() + "\r\n");
+	//     sb.append("Content-Type: application/json\r\n");
+	//     sb.append("\r\n");
+
+	//     sb.append(this.sendData);
+
+	//     socketWr.write(sb.toString());
+
+	//     System.out.println(sb);
+	//     socketWr.flush();
+	// }
+
+	public void sendHttpPacket() throws Exception{
+		HttpURLConnection con = (HttpURLConnection)url.openConnection();
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Content-Type", "application/json; utf-8");
+		con.setRequestProperty("Accept", "application/json");
+		con.setDoOutput(true);
+		String jsonInputString = this.data.toString();
+		try(OutputStream os = con.getOutputStream()){
+    		byte[] input = jsonInputString.getBytes("utf-8");
+    		os.write(input, 0, input.length);           
+		}catch(Exception e){
+			System.out.println(e);
+		}
+
+		try(BufferedReader br = new BufferedReader(
+ 			new InputStreamReader(con.getInputStream(), "utf-8"))) {
+    		StringBuilder response = new StringBuilder();
+    		String responseLine = null;
+    		while ((responseLine = br.readLine()) != null) {
+       			response.append(responseLine.trim());
+    		}
+    		System.out.println(response.toString());
+		}catch(Exception e){
+			System.out.println(e);
+		}
 	}
 
 }
@@ -83,12 +150,19 @@ class AgricultureSensor implements Runnable{
 	long message_no;
 	JSONObject data;
 	String type;
+	URL url;
+	String path = "data/read";
 
 	public AgricultureSensor(int id,int greenhouse_id){
 		this.node_id = id;
 		this.message_no = 0;
 		this.greenhouse_id = greenhouse_id;
 		this.type = "agriculture";
+		try{
+			this.url = new URL("http://127.0.0.1:5000/" + path);
+		}catch(Exception e){
+			System.out.println(e);
+		}
 	}
 
 	public void run(){
@@ -102,6 +176,7 @@ class AgricultureSensor implements Runnable{
 				this.moisture = 40 + Math.random() * (80-40);
 				this.message_no++;
 				this.createJson();
+				this.sendHttpPacket();
 				Thread.sleep(500);
 			}
 			catch(Exception e){
@@ -113,14 +188,42 @@ class AgricultureSensor implements Runnable{
 	public void createJson(){
 		this.data = new JSONObject();
 		this.data.put("type", this.type);
-		this.data.put("time", this.ts);
+		this.data.put("time", this.ts.toString());
 		this.data.put("greenhouse_id", this.greenhouse_id);
 		this.data.put("humidity", this.humidity);
 		this.data.put("temperature", this.temperature);
 		this.data.put("moisture", this.moisture);
 
-		System.out.println(data);
-		System.out.println();
+		// System.out.println(data);
+		// System.out.println();
+	}
+
+	public void sendHttpPacket() throws Exception{
+		HttpURLConnection con = (HttpURLConnection)url.openConnection();
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Content-Type", "application/json; utf-8");
+		con.setRequestProperty("Accept", "application/json");
+		con.setDoOutput(true);
+		String jsonInputString = this.data.toString();
+		// System.out.println(jsonInputString);
+		try(OutputStream os = con.getOutputStream()){
+    		byte[] input = jsonInputString.getBytes("utf-8");
+    		os.write(input, 0, input.length);           
+		}catch(Exception e){
+			System.out.println(e);
+		}
+
+		try(BufferedReader br = new BufferedReader(
+ 			new InputStreamReader(con.getInputStream(), "utf-8"))) {
+    		StringBuilder response = new StringBuilder();
+    		String responseLine = null;
+    		while ((responseLine = br.readLine()) != null) {
+       			response.append(responseLine.trim());
+    		}
+    		System.out.println(response.toString());
+		}catch(Exception e){
+			System.out.println(e);
+		}
 	}
 
 }
@@ -137,6 +240,8 @@ class AirSensor implements Runnable{
 	long message_no;
 	JSONObject data;
 	String type;
+	URL url;
+	String path = "data/read";
 
 	public AirSensor(int id,Location location){
 		this.node_id = id;
@@ -144,6 +249,11 @@ class AirSensor implements Runnable{
 		this.city = location.city;
 		this.suburb = location.suburb;
 		this.type = "air";
+		try{
+			this.url = new URL("http://127.0.0.1:5000/" + path);
+		}catch(Exception e){
+			System.out.println(e);
+		}
 	}
 
 	public void run(){
@@ -157,6 +267,7 @@ class AirSensor implements Runnable{
 				this.o3 = 0.0008 + Math.random() * (0.0020 - 0.0008);
 				this.message_no++;
 				this.createJson();
+				this.sendHttpPacket();
 				Thread.sleep(500);
 			}
 			catch(Exception e){
@@ -168,15 +279,43 @@ class AirSensor implements Runnable{
 	public void createJson(){
 		this.data = new JSONObject();
 		this.data.put("type", this.type);
-		this.data.put("time", this.ts);
+		this.data.put("time", this.ts.toString());
 		this.data.put("city", this.city);
 		this.data.put("suburb", this.suburb);
 		this.data.put("so2", this.so2);
 		this.data.put("no2", this.no2);
 		this.data.put("o3", this.o3);
 
-		System.out.println(data);
-		System.out.println();
+		// System.out.println(data);
+		// System.out.println();
+	}
+
+	public void sendHttpPacket() throws Exception{
+		HttpURLConnection con = (HttpURLConnection)url.openConnection();
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Content-Type", "application/json; utf-8");
+		con.setRequestProperty("Accept", "application/json");
+		con.setDoOutput(true);
+		String jsonInputString = this.data.toString();
+		// System.out.println(jsonInputString);
+		try(OutputStream os = con.getOutputStream()){
+    		byte[] input = jsonInputString.getBytes("utf-8");
+    		os.write(input, 0, input.length);           
+		}catch(Exception e){
+			System.out.println(e);
+		}
+
+		try(BufferedReader br = new BufferedReader(
+ 			new InputStreamReader(con.getInputStream(), "utf-8"))) {
+    		StringBuilder response = new StringBuilder();
+    		String responseLine = null;
+    		while ((responseLine = br.readLine()) != null) {
+       			response.append(responseLine.trim());
+    		}
+    		System.out.println(response.toString());
+		}catch(Exception e){
+			System.out.println(e);
+		}
 	}
 
 }
@@ -184,9 +323,9 @@ class AirSensor implements Runnable{
 class SensorBots{
 	public static void main(String[] args) throws InterruptedException{
 
-		int agriculture_bot = 10;
-		int weather_bot = 20;
-		int air_bot = 20;
+		int agriculture_bot = 17;
+		int weather_bot = 17;
+		int air_bot = 17;
 
 		ArrayList<Location> locations = new ArrayList<Location>();
 
