@@ -44,7 +44,7 @@ class WeatherSensor implements Runnable{
 		this.suburb = location.suburb;
 		this.type = "weather";
 		try{
-			this.url = new URL("http://127.0.0.1:3000/" + path);
+			this.url = new URL("http://127.0.0.1:5000/" + path);
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -160,7 +160,7 @@ class AgricultureSensor implements Runnable{
 		this.greenhouse_id = greenhouse_id;
 		this.type = "agriculture";
 		try{
-			this.url = new URL("http://127.0.0.1:3000/" + path);
+			this.url = new URL("http://127.0.0.1:5000/" + path);
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -189,7 +189,7 @@ class AgricultureSensor implements Runnable{
 	public void createJson(){
 		this.data = new JSONObject();
 		this.data.put("type", this.type);
-		this.data.put("time", this.ts);
+		this.data.put("time", this.ts.toString);
 		this.data.put("greenhouse_id", this.greenhouse_id);
 		this.data.put("humidity", this.humidity);
 		this.data.put("temperature", this.temperature);
@@ -251,7 +251,7 @@ class AirSensor implements Runnable{
 		this.suburb = location.suburb;
 		this.type = "air";
 		try{
-			this.url = new URL("http://127.0.0.1:3000/" + path);
+			this.url = new URL("http://127.0.0.1:5000/" + path);
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -280,7 +280,7 @@ class AirSensor implements Runnable{
 	public void createJson(){
 		this.data = new JSONObject();
 		this.data.put("type", this.type);
-		this.data.put("time", this.ts);
+		this.data.put("time", this.ts.toString());
 		this.data.put("city", this.city);
 		this.data.put("suburb", this.suburb);
 		this.data.put("so2", this.so2);
