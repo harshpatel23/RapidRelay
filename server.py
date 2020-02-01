@@ -21,4 +21,8 @@ def read():
     elif data['type'] == "air":
         client.publish("queue_air_quality", string_data)
 
-    return None
+    return string_data
+
+
+if __name__ == "__main__":
+    app.run()
