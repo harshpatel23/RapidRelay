@@ -18,6 +18,7 @@ password = ''
 database = 'bugbox_db'
 cursorclass = pymysql.cursors.DictCursor
 compressed_files_dir = 'compressed_files'
+raw_files_dir = 'raw_files'
 cloud_url = ''
 
 
@@ -57,11 +58,16 @@ def compress_data_to_file_from(table):
 
 		# 2. compress and encode data
 		results = json.dumps(results)
+		results = bytes(results, 'utf-8')
+		current_time = str(time.time()).replace('.', '_')
+		with open(f'{raw_files_dir}/{table}_{current_time}', 'wb') as bin_file:
+			bin_file.write(results)
+
+
 		# print('json data', results)
-		compressed = base64.b64encode(zlib.compress(bytes(results, 'utf-8'), 1))
+		compressed = base64.b64encode(zlib.compress(results, 9))
 		# print(compressed, type(compressed))
 
-		current_time = str(time.time()).replace('.', '_')
 		with open(f'{compressed_files_dir}/{table}_{current_time}', 'wb') as bin_file:
 			bin_file.write(compressed)
 
