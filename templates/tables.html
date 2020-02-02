@@ -1,21 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-<table class="table">
-  <thead class="thead-dark">
-    <tr>
-      {% for key in data[0] %}
-        <th scope="col">{{ key }}</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for dict_item in data %}
-      <tr>
-        {% for key, value in dict_item.items() %}
-          <td>{{value}}</td>
-        {% endfor %}
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    <div class="container">
+        <h3> Total {{ count }} data points found for this query</h3>
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              {% for key in data[0] %}
+                <th scope="col">{{ key }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for dict_item in data %}
+              <tr>
+                {% for key, value in dict_item.items() %}
+                  <td>{{value}}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+
 {% endblock %}
