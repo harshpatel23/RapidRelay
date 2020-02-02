@@ -9,7 +9,7 @@ connection = pymysql.connect(host='localhost',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-broker_address = "10.0.15.92"
+broker_address = "192.168.225.77"
 queue_name = "queue_air_quality"
 count = 0
 

@@ -4,7 +4,7 @@ import json
 import datetime
 
 app = Flask(__name__)
-broker_address = "10.0.15.92"
+broker_address = "192.168.225.77"
 client = mqtt.Client("P1")
 client.connect(broker_address, port=1883)
 
@@ -32,4 +32,4 @@ def read():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run('0.0.0.0')
