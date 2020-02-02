@@ -11,7 +11,7 @@ from threading import Thread
 import socket
 import os
 
-host = 'www.google.com'  # cloud IP
+host = 'www.google.com'
 server = 'localhost'
 username = 'root'
 password = ''
@@ -20,7 +20,7 @@ cursorclass = pymysql.cursors.DictCursor
 base_dir = '/home/tanay/Projects/BugBox'
 compressed_files_dir = 'compressed_files'
 raw_files_dir = 'raw_files'
-cloud_url = ''
+cloud_url = '192.168.225.241'
 
 
 def is_connected(hostname):
@@ -36,7 +36,6 @@ def is_connected(hostname):
     except Exception as e:
         traceback.print_exc()
     return False
-
 
 def compress_data_to_file_from(table):
     print('compressing', table)
@@ -90,13 +89,13 @@ def compress_data_to_file_from(table):
 
 def send_data_to_cloud(filename):
     s = socket.socket()             # Create a socket object
-    host = socket.gethostname()     # Get local machine name
+    host = cloud_url                # Get local machine name
     port = 60000                    # Reserve a port for your service.
     buffer_size = 102400
 
     s.connect((host, port))
 
-    f = open(f'{base_dir}/{compressed_files_dir}/{filename}','rb')
+    f = open(f'{base_dir}/{filename}','rb')
     l = f.read(buffer_size)
     while (l):
         s.send(l)
@@ -149,6 +148,7 @@ if is_connected(host) and not is_already_running():
             # send file to cloud
             send_data_to_cloud(compressed_files_dir+'/'+ filename)
             # TODO remove compressed files after use
+            os.remove(f'{base_dir}/{compressed_files_dir}/{filename}')
     except Exception as e:
         traceback.print_exc()
     finally:
