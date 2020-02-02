@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt  # import the client1
 import json
 import pymysql.cursors
+from credentials import server_ip
 
 # Connect to the database
 connection = pymysql.connect(host='localhost',
@@ -11,7 +12,7 @@ connection = pymysql.connect(host='localhost',
                              cursorclass=pymysql.cursors.DictCursor)
 
 
-broker_address = "192.168.225.77"
+broker_address = server_ip
 queue_name = "queue_agriculture"
 count = 0
 

@@ -8,10 +8,10 @@ import json
 import traceback
 import time
 from threading import Thread
+import socket
 import os
 
-
-host = 'www.google.com'
+host = '127.0.0.1'  # cloud IP
 server = 'localhost'
 username = 'root'
 password = ''
@@ -71,14 +71,9 @@ def compress_data_to_file_from(table):
 		with open(f'{compressed_files_dir}/{table}_{current_time}', 'wb') as bin_file:
 			bin_file.write(compressed)
 
-		# decompress in cloud
-		# decompressed = zlib.decompress(base64.b64decode(compressed))
-		# print(decompressed, type(decompressed))
-		#
-		# decompressed = json.loads(decompressed)
-		# print(decompressed)
 
 		# 3. delete data from db
+
 		ids = ", ".join([str(x) for x in ids])
 		delete_query = f'delete from {table} where id in ({ids});'
 		# print(delete_query)
@@ -90,6 +85,28 @@ def compress_data_to_file_from(table):
 		db.rollback()
 
 	db.close()
+
+
+def send_data_to_cloud(filename):
+	s = socket.socket()             # Create a socket object
+	host = socket.gethostname()     # Get local machine name
+	port = 60000                    # Reserve a port for your service.
+	buffer_size = 102400
+
+	s.connect((host, port))
+
+	f = open(filename,'rb')
+	l = f.read(buffer_size)
+	while (l):
+	   s.send(l)
+	   # print('Sent ',repr(l))
+	   l = f.read(buffer_size)
+	f.close()
+
+	print('Done sending'+filename)
+	s.close()
+	f.close()
+	s.close()
 
 
 def is_already_running():
@@ -129,12 +146,14 @@ if is_connected(host) and not is_already_running():
 	for filename in os.listdir(compressed_files_dir):
 		print(filename)
 		# send file to cloud
-		pass
+		# send_data_to_cloud(compressed_files_dir+'/'+ filename)
 
 	# flag off
 	query = 'update locks set value = "false" where flag = 1;'
 	cursor.execute(query)
 	db.commit()
+
+	# TODO remove compressed files after use
 
 else:
 	# else don't do anything

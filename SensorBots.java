@@ -19,14 +19,17 @@ class LogWriter implements Runnable{
 	}
 
 	public void run(){
-		try{
-			this.ts = new Timestamp(date.getTime());
-			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-			out.write("Time : " + ts.toString() + " Data Sent: " + data_sent.getAndIncrement() +" Data Received " + data_received.getAndIncrement());
-			out.close();
-			Thread.sleep(30000);
-		}catch(Exception e){
-			System.out.println(e);
+		while(true){
+			try{
+				this.date = new Date();
+				this.ts = new Timestamp(date.getTime());
+				BufferedWriter out = new BufferedWriter(new FileWriter(filename,true));
+				out.write("Time : " + ts.toString() + " Data Sent: " + data_sent.getAndIncrement() +" Data Received " + data_received.getAndIncrement() + "\n");
+				out.close();
+				Thread.sleep(10000);
+			}catch(Exception e){
+				System.out.println(e);
+			}
 		}
 	}
 
@@ -59,13 +62,13 @@ class WeatherSensor implements Runnable{
 	JSONObject data;
 	String type;
 	URL url;
-	String path = "data/read";
+	String urlstring;
 	AtomicInteger data_sent;
 	AtomicInteger data_received;
 	// Socket socket;
 	// BufferedWriter socketWr;
 
-	public WeatherSensor(int id,Location location, AtomicInteger data_sent, AtomicInteger data_received){
+	public WeatherSensor(int id,Location location, AtomicInteger data_sent, AtomicInteger data_received,String urlstring){
 		this.node_id = id;
 		this.message_no = 0;
 		this.city = location.city;
@@ -73,8 +76,9 @@ class WeatherSensor implements Runnable{
 		this.type = "weather";
 		this.data_sent = data_sent;
 		this.data_received = data_received;
+		this.urlstring = urlstring;
 		try{
-			this.url = new URL("http://127.0.0.1:5000/" + path);
+			this.url = new URL(this.urlstring);
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -185,19 +189,20 @@ class AgricultureSensor implements Runnable{
 	JSONObject data;
 	String type;
 	URL url;
-	String path = "data/read";
+	String urlstring;
 	AtomicInteger data_sent;
 	AtomicInteger data_received;
 
-	public AgricultureSensor(int id,int greenhouse_id, AtomicInteger data_sent, AtomicInteger data_received){
+	public AgricultureSensor(int id,int greenhouse_id, AtomicInteger data_sent, AtomicInteger data_received, String urlstring){
 		this.node_id = id;
 		this.message_no = 0;
 		this.greenhouse_id = greenhouse_id;
 		this.type = "agriculture";
 		this.data_received = data_received;
 		this.data_sent = data_sent;
+		this.urlstring = urlstring;
 		try{
-			this.url = new URL("http://127.0.0.1:5000/" + path);
+			this.url = new URL(this.urlstring);
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -283,11 +288,11 @@ class AirSensor implements Runnable{
 	JSONObject data;
 	String type;
 	URL url;
-	String path = "data/read";
+	String urlstring;
 	AtomicInteger data_sent;
 	AtomicInteger data_received;
 
-	public AirSensor(int id,Location location, AtomicInteger data_sent, AtomicInteger data_received){
+	public AirSensor(int id,Location location, AtomicInteger data_sent, AtomicInteger data_received, String urlstring){
 		this.node_id = id;
 		this.message_no = 0;
 		this.city = location.city;
@@ -295,8 +300,9 @@ class AirSensor implements Runnable{
 		this.data_sent = data_sent;
 		this.data_received = data_received;
 		this.type = "air";
+		this.urlstring = urlstring;
 		try{
-			this.url = new URL("http://127.0.0.1:5000/" + path);
+			this.url = new URL(this.urlstring);
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -377,6 +383,8 @@ class SensorBots{
 		int weather_bot = 17;
 		int air_bot = 17;
 
+		String url = "http://192.168.225.77:5000/data/read";
+
 		AtomicInteger data_sent = new AtomicInteger(1);
 		AtomicInteger data_received = new AtomicInteger(1);
 
@@ -407,20 +415,22 @@ class SensorBots{
 		locations.add(new Location("Pune", "Kharadi"));
 		locations.add(new Location("Pune", "Pune-Satara Road"));
 
+		Thread tx = new Thread(new LogWriter(data_sent, data_received));
+		tx.start();	
+
 		for(int i=1;i<=agriculture_bot;i++){
-			Thread t = new Thread(new AgricultureSensor(i,1000+i, data_sent, data_received));
+			Thread t = new Thread(new AgricultureSensor(i,1000+i, data_sent, data_received, url));
 			t.start();
 		}
 
 		for(int i=1;i<=air_bot;i++){
-			Thread t = new Thread(new AirSensor(i,locations.get(i-1), data_sent, data_received));
+			Thread t = new Thread(new AirSensor(i,locations.get(i-1), data_sent, data_received, url));
 			t.start();
 		}
 
 		for(int i=1;i<=weather_bot;i++){
-			Thread t = new Thread(new WeatherSensor(i,locations.get(i-1), data_sent, data_received));
+			Thread t = new Thread(new WeatherSensor(i,locations.get(i-1), data_sent, data_received, url));
 			t.start();
 		}
-
 	}
 }

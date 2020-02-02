@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 import paho.mqtt.client as mqtt
 import json
+from credentials import server_ip
 import datetime
 
 app = Flask(__name__)
-broker_address = "192.168.225.77"
+broker_address = server_ip
 client = mqtt.Client("P1")
 client.connect(broker_address, port=1883)
 
