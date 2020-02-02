@@ -7,6 +7,41 @@ RapidRelay collects data from multiple sources (Weather, Soil moisture and air q
 After every 5 minutes, the database is encoded and compressed with an ~83% compression ratio and is sent to the cloud infrastructure.
 The data is decompressed, decoded and visualized in the cloud infrastructure.
 
+### Demo
+TODO
+
+### Installation steps:
+
+ 1. Clone this repo
+ `https://github.com/harshpatel23/RapidRelay.git`
+ 
+ 2. Change directory
+ `cd RapidRelay/`
+
+ 3. Create a virtual environment with Python 3.6: 
+ `python3 -m virtualenv venv`
+ 
+ 4. Activate the environment:
+ 	- **Linux:** `source venv/bin/activate`
+	- **Windows:** `.\venv\Scripts\activate.bat`
+		 
+ 5. Install the required packages from `requirements.txt` inside this virtual environment:
+	 `pip install -r requirements.txt`
+
+ 6. Install mosquitto broker (refer the following link)
+http://www.steves-internet-guide.com/install-mosquitto-linux/
+
+ 7. Second install paho-mqtt (refer the following link)
+http://www.steves-internet-guide.com/into-mqtt-python-client/
+ 
+    
+### Usage Instructions:
+ 1. Activate the environment:
+ 	- **Linux:** `source venv/bin/activate`
+	- **Windows:** `.\venv\Scripts\activate.bat`
+	
+    TODO
+
 ### Future Work
 
 1. Graphical representation and analysis of the data received on cloud.
@@ -21,6 +56,19 @@ The data is decompressed, decoded and visualized in the cloud infrastructure.
 
 ### Recognition
     - Part of KJSCE HACKIT 2.0 (Feb 2020).
-    
+
+### Development
+
+Want to contribute? Great!
+Please read [CONTRIBUTING.md](https://github.com/murtaza98/VirtualProctor/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+### Todos
+
+ - 
+
+### License
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/murtaza98/VirtualProctor/LICENSE.md) file for details
+
 ### Note 
 This project was done under 24 hours with minimal pre-preparation.
+
