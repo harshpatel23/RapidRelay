@@ -13,7 +13,27 @@ cursorclass = pymysql.cursors.DictCursor
 
 @app.route('/')
 def hello_world():
-	return render_template('home.html')
+	db = pymysql.connect(server, username, password, database, cursorclass=cursorclass)
+	cursor = db.cursor()
+	count_sql1 = 'SELECT COUNT(*) as c1 FROM weather_data;'
+	count_sql2 = 'SELECT COUNT(*) as c2 FROM agriculture_data;'
+	count_sql3 = 'SELECT COUNT(*) as c3 FROM air_quality_data;'
+	try:
+		cursor.execute(count_sql1)
+		count1 = cursor.fetchone()
+
+		cursor.execute(count_sql2)
+		count2 = cursor.fetchone()
+
+		cursor.execute(count_sql3)
+		count3 = cursor.fetchone()
+		total_count = int(count1['c1']) + int(count2['c2']) + int(count3['c3'])
+	except Exception as e:
+		traceback.print_exc()
+		db.rollback()
+
+	db.close()
+	return render_template('home.html', count=total_count)
 
 
 @app.route('/weather/<city>/', methods=['GET'])
