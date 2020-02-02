@@ -138,3 +138,6 @@ transmission_logs.txt
 
 sample_1.txt
 credentials.py
+
+compressed_files/
+raw_files/
