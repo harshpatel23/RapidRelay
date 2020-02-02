@@ -13,7 +13,7 @@ cursorclass = pymysql.cursors.DictCursor
 
 @app.route('/')
 def hello_world():
-	return render_template('base.html')
+	return render_template('home.html')
 
 
 @app.route('/weather/<city>/', methods=['GET'])
@@ -23,7 +23,7 @@ def show_city_weather(city):
 	cursor = db.cursor()
 	count_sql = 'SELECT COUNT(*) as c FROM weather_data WHERE city="'+city+'";'
 
-	sql = 'SELECT * FROM weather_data where city="'+city+'" ORDER BY `TIME` DESC LIMIT 10;'
+	sql = 'SELECT * FROM weather_data where city="'+city+'" ORDER BY `TIME` DESC LIMIT 20;'
 	print(sql)
 	try:
 		cursor.execute(count_sql)
@@ -45,7 +45,7 @@ def show_greehouse_data():
 	db = pymysql.connect(server, username, password, database, cursorclass=cursorclass)
 	cursor = db.cursor()
 	count_sql = 'SELECT COUNT(*) as c FROM agriculture_data;'
-	sql = 'SELECT * FROM agriculture_data ORDER BY `TIME` DESC LIMIT 10;'
+	sql = 'SELECT * FROM agriculture_data ORDER BY `TIME` DESC LIMIT 20;'
 	print(sql)
 	try:
 		cursor.execute(count_sql)
@@ -66,7 +66,7 @@ def show_city_air_quality(city):
 	db = pymysql.connect(server, username, password, database, cursorclass=cursorclass)
 	cursor = db.cursor()
 	count_sql = 'SELECT COUNT(*) as c FROM air_quality_data WHERE city="' + city + '";'
-	sql = 'SELECT * FROM air_quality_data where city="'+city+'" ORDER BY `TIME` DESC LIMIT 10;'
+	sql = 'SELECT * FROM air_quality_data where city="'+city+'" ORDER BY `TIME` DESC LIMIT 20;'
 	print(sql)
 	try:
 		cursor.execute(count_sql)
